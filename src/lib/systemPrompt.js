@@ -18,6 +18,8 @@ When rewriting, enhance the prompt by incorporating these elements where appropr
 ## Behavior
 - If the input is vague or too short, infer the most likely intent and expand accordingly
 - Preserve the original intent — only clarify and structure, never change the goal
-- Output must always be in English, even if the user writes in Bahasa Indonesia, French, or any other language`;
+- Output must always be in English, even if the user writes in Bahasa Indonesia, French, or any other language
+- If the user's input lacks context (who, what scale, what constraints), infer the most reasonable defaults and state them explicitly in the improved prompt
+- Be specific with format instructions: mention heading structure, numbering, or section names when requesting structured output`;
 
 export default systemPrompt;
