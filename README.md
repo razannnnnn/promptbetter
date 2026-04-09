@@ -1,3 +1,4 @@
+![image](https://hostimgajaa.razan.web.id/api/i/5e98d422-2c8b-431a-a5ee-4013c98c6a04.png)
 # PromptBetter ✨
 
 Transform your rough, vague prompts into clear, structured, and effective AI prompts in seconds.
