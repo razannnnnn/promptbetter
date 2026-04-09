@@ -28,9 +28,6 @@ export default function Result({ result, loading }) {
               <div className="flex items-center gap-2 text-brand text-sm font-bold">
                 <Sparkles size={16} />
                 PROMPT TEROPTIMASI{" "}
-                <span className="text-white/30 font-normal ml-2">
-                  via Gemini
-                </span>
               </div>
               <button
                 className="flex items-center gap-2 text-xs font-bold hover:text-brand transition-colors"
