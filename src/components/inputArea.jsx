@@ -2,7 +2,7 @@
 import { Send } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function InputArea({ setResult, setLoading, loading }) {
   const [userPrompt, setUserPrompt] = useState("");
@@ -72,7 +72,6 @@ export default function InputArea({ setResult, setLoading, loading }) {
           </div>
         </div>
 
-        {/* Error / Limit exceeded */}
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
@@ -82,18 +81,18 @@ export default function InputArea({ setResult, setLoading, loading }) {
             <p className="text-sm text-red-400">{error.message}</p>
             {!error.isLoggedIn && (
               <div className="flex gap-2 shrink-0">
-                <button
-                  onClick={() => signIn("github")}
+                <Link
+                  href="/sign-in"
                   className="px-4 py-2 text-xs border border-white/10 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
                 >
-                  GitHub
-                </button>
-                <button
-                  onClick={() => signIn("google")}
+                  Masuk
+                </Link>
+                <Link
+                  href="/sign-up"
                   className="px-4 py-2 text-xs bg-brand text-black font-medium rounded-full hover:opacity-90 transition-opacity"
                 >
-                  Google
-                </button>
+                  Daftar
+                </Link>
               </div>
             )}
           </motion.div>

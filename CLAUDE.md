@@ -8,26 +8,28 @@
 ## 2. Technology Stack
 - **Framework**: Next.js 16 (App Router)
 - **Language**: JavaScript
+- **Auth**: Clerk (`@clerk/nextjs`) — OAuth (GitHub/Google), email sign-up + verification, `/profile`
+- **AI**: Groq SDK (`llama-3.3-70b-versatile`)
+- **Database**: MongoDB + Mongoose (rate limits)
 - **Styling**: Tailwind CSS 4
 - **Animation**: `motion` (from `motion/react`)
-- **UI Components**:
-  - Custom glassmorphism components
-  - Lucide React icons
-  - React Markdown for rendering AI-generated content
+- **UI**: Glassmorphism (`.glass` in `globals.css`), Lucide icons, Clerk prebuilt components with custom `clerkAppearance.js`
 
 ## 3. Project Structure
 ```
 src/
 ├── app/
-│   ├── layout.js          # Root layout with global styles and fonts
-│   └── page.js            # Main application page (Home)
+│   ├── layout.js              # ClerkProvider + fonts
+│   ├── page.js                # Home (Header, Hero, Footer)
+│   ├── sign-in/[[...sign-in]]/
+│   ├── sign-up/[[...sign-up]]/
+│   ├── profile/[[...profile]]/
+│   └── api/improvePrompt/route.js
 ├── components/
-│   ├── GlassCard.js       # Reusable glassmorphism card component
-│   └── Button.js          # Custom button component
-├── styles/
-│   └── globals.css        # Global Tailwind CSS styles
-└── lib/
-    └── api.js             # API utility functions (placeholder)
+│   ├── Header.jsx, Hero.jsx, inputArea.jsx, Result.jsx, Footer.jsx
+├── lib/
+│   ├── clerkAppearance.js, systemPrompt.js, rateLimit.js, mongodb.js
+└── middleware.js              # Public: /, sign-in/up, improvePrompt API
 ```
 
 ## 4. Key Features
@@ -39,41 +41,15 @@ src/
 - **Responsive Design**: Mobile-first approach with breakpoints for all devices
 
 ### 4.2. Core Functionality
-- **Prompt Input**: Textarea for users to enter prompts
-- **AI Optimization**: Placeholder for AI-powered prompt optimization
-- **Result Display**: Shows optimized prompt, model used, and explanation
-- **Copy to Clipboard**: One-click copying of optimized prompts
-- **History**: Maintains chat history with previous prompts
-- **Reset Function**: Clear input and results with a single click
-
-### 4.3. UI Components
-#### `GlassCard.js`
-```javascript
-// src/components/GlassCard.js
-<GlassCard className="glass rounded-3xl p-6 space-y-3">
-  {/* Card content */}
-</GlassCard>
-```
-- **Props**: `children`, `className`
-- **Styling**: `bg-white/5`, `backdrop-blur-xl`, `border-white/10`
-
-#### `Button.js`
-```javascript
-// src/components/Button.js
-<Button
-  variant="primary"
-  size="lg"
-  onClick={handleClick}
-  disabled={isDisabled}
->
-  {/* Button content */}
-</Button>
-```
-- **Variants**: `primary`, `secondary`, `outline`
-- **Sizes**: `sm`, `md`, `lg`
-- **States**: Hover, active, disabled, loading
+- **Prompt Input**: Textarea (max 1000 chars) in `inputArea.jsx`
+- **AI Optimization**: `POST /api/improvePrompt` via Groq
+- **Result Display**: `Result.jsx` with copy-to-clipboard
+- **Auth**: Clerk — guest 5 req/day (IP), user 10 req/day (`userId`)
+- **Profile**: `/profile` with `<UserProfile />`
 
 ## 5. API Integration
+- **improvePrompt**: Uses `auth()` from `@clerk/nextjs/server` for `userId`; public route (guests allowed)
+- **Env**: `GROQ_API_KEY`, `MONGODB_URI`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` (see `.env.example`)
 
 
 ## 6. Animation System

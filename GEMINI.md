@@ -9,7 +9,7 @@
 - **Styling**: Tailwind CSS 4.0.0+ (using `@tailwindcss/postcss`)
 - **AI Engine**: Groq SDK (`llama-3.3-70b-versatile`)
 - **Database**: MongoDB with Mongoose (for rate limiting and potentially user data)
-- **Authentication**: Next-Auth 4.24.13
+- **Authentication**: Clerk (`@clerk/nextjs`) — OAuth, email + verification, `/profile`
 - **Animations**: Framer Motion (`motion/react`)
 - **Icons**: Lucide React
 
@@ -18,8 +18,8 @@
 src/
 ├── app/
 │   ├── api/
-│   │   ├── auth/           # Next-Auth configuration
 │   │   └── improvePrompt/  # AI prompt improvement endpoint
+│   ├── sign-in/, sign-up/, profile/  # Clerk UI routes
 │   ├── layout.js           # Root layout with providers
 │   └── page.js             # Main landing page
 ├── components/
@@ -27,11 +27,12 @@ src/
 │   ├── Hero.jsx            # Main stateful container
 │   ├── inputArea.jsx       # User input handling
 │   ├── Result.jsx          # AI output display (Markdown support)
-│   └── SessionWrapper.jsx  # Auth provider wrapper
 └── lib/
+    ├── clerkAppearance.js  # Clerk theme + Indonesian localization
     ├── mongodb.js          # Database connection utility
     ├── rateLimit.js        # IP & User-based rate limiting logic
     └── systemPrompt.js     # Core AI expert persona instructions
+src/middleware.js           # Clerk middleware (public home + API)
 ```
 
 ## Building and Running

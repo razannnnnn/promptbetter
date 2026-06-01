@@ -1,8 +1,14 @@
 "use client";
 import { useState } from "react";
 import { Sparkles, X, Heart, Menu } from "lucide-react";
-import { useSession, signIn, signOut } from "next-auth/react";
-import Image from "next/image";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 
 function DonateModal({ onClose }) {
@@ -74,25 +80,21 @@ function DonateModal({ onClose }) {
 }
 
 export default function Header() {
-  const { data: session, status } = useSession();
   const [showDonate, setShowDonate] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
   return (
     <>
       <header className="w-full max-w-5xl flex justify-between items-center mb-12">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center glow">
             <Sparkles className="text-black w-6 h-6" />
           </div>
-          {/* Teks disembunyikan di mobile */}
           <h1 className="hidden sm:block text-2xl font-bold tracking-tighter">
             PROMPT<span className="text-brand">BETTER</span>
           </h1>
-        </div>
+        </Link>
 
-        {/* Desktop Nav */}
         <div className="hidden sm:flex items-center gap-4">
           <button
             onClick={() => setShowDonate(true)}
@@ -101,56 +103,42 @@ export default function Header() {
             Donate
           </button>
 
-          {status === "loading" ? null : session ? (
-            <div className="flex items-center gap-3">
-              {session.user.image && (
-                <Image
-                  src={session.user.image}
-                  alt="avatar"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-              )}
-              <span className="text-sm text-white/70 hidden md:block">
-                {session.user.name}
-              </span>
-              <button
-                onClick={() => signOut()}
-                className="px-4 py-2 text-sm text-white/60 hover:text-white border border-white/10 rounded-full transition-colors"
-              >
-                Logout
+          <SignedOut>
+            <SignInButton mode="redirect">
+              <button className="px-5 py-2 border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-full transition-colors">
+                Masuk
               </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => signIn("github")}
-                className="px-5 py-2 border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-full transition-colors"
-              >
-                GitHub
+            </SignInButton>
+            <SignUpButton mode="redirect">
+              <button className="px-5 py-2 bg-brand hover:opacity-90 text-black text-sm font-medium rounded-full transition-opacity">
+                Daftar
               </button>
-              <button
-                onClick={() => signIn("google")}
-                className="px-5 py-2 bg-brand hover:opacity-90 text-black text-sm font-medium rounded-full transition-opacity"
-              >
-                Google
-              </button>
-            </div>
-          )}
+            </SignUpButton>
+          </SignedOut>
+
+          <SignedIn>
+            <UserButton
+              userProfileMode="modal"
+              appearance={{
+                elements: {
+                  avatarBox: "w-9 h-9",
+                },
+              }}
+            />
+          </SignedIn>
         </div>
 
-        {/* Mobile: avatar (kalau login) + hamburger */}
         <div className="flex sm:hidden items-center gap-3">
-          {session?.user?.image && (
-            <Image
-              src={session.user.image}
-              alt="avatar"
-              width={32}
-              height={32}
-              className="rounded-full"
+          <SignedIn>
+            <UserButton
+              userProfileMode="modal"
+              appearance={{
+                elements: {
+                  avatarBox: "w-8 h-8",
+                },
+              }}
             />
-          )}
+          </SignedIn>
           <button
             onClick={() => setShowMenu((v) => !v)}
             className="w-10 h-10 flex items-center justify-center border border-white/10 bg-white/5 rounded-full transition-colors hover:bg-white/10"
@@ -182,7 +170,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Mobile Dropdown Menu */}
       <AnimatePresence>
         {showMenu && (
           <motion.div
@@ -192,7 +179,6 @@ export default function Header() {
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
             className="sm:hidden fixed top-20 right-4 z-30 bg-[#111111] border border-white/10 rounded-2xl p-4 w-52 flex flex-col gap-2 shadow-xl"
           >
-            {/* Donate */}
             <button
               onClick={() => {
                 setShowMenu(false);
@@ -205,49 +191,28 @@ export default function Header() {
 
             <div className="border-t border-white/10 my-1" />
 
-            {/* Auth */}
-            {status === "loading" ? null : session ? (
-              <>
-                <p className="px-4 py-1 text-xs text-white/30 truncate">
-                  {session.user.name}
-                </p>
-                <button
-                  onClick={() => {
-                    setShowMenu(false);
-                    signOut();
-                  }}
-                  className="w-full text-left px-4 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => {
-                    setShowMenu(false);
-                    signIn("github");
-                  }}
-                  className="w-full text-left px-4 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-                >
-                  Login GitHub
-                </button>
-                <button
-                  onClick={() => {
-                    setShowMenu(false);
-                    signIn("google");
-                  }}
-                  className="w-full text-left px-4 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-                >
-                  Login Google
-                </button>
-              </>
-            )}
+            <SignedOut>
+              <Link
+                href="/sign-in"
+                onClick={() => setShowMenu(false)}
+                className="block w-full text-left px-4 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+              >
+                Masuk
+              </Link>
+              <Link
+                href="/sign-up"
+                onClick={() => setShowMenu(false)}
+                className="block w-full text-left px-4 py-3 text-sm font-medium text-brand hover:bg-white/5 rounded-xl transition-colors"
+              >
+                Daftar
+              </Link>
+            </SignedOut>
+
+
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Donate Modal */}
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
     </>
   );

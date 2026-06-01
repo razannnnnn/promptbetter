@@ -5,87 +5,88 @@
 
 ## 🚀 Live Demo
 
-[promptbetter.vercel.app](https://promptbetter.vercel.app) <!-- ganti dengan URL asli kamu -->
-
-## 📸 Preview
-
-<!-- tambahkan screenshot di sini -->
+[promptbetter.vercel.app](https://promptbetter.vercel.app)
 
 ## 🛠️ Tech Stack
 
-- **Framework** – [Next.js](https://nextjs.org/) (App Router)
-- **Styling** – [Tailwind CSS](https://tailwindcss.com/)
-- **AI Model** – LLaMA 3.3 70B via [Groq API](https://console.groq.com/)
+- **Framework** – [Next.js](https://nextjs.org/) 16 (App Router)
+- **Auth** – [Clerk](https://clerk.com/) (OAuth GitHub/Google, email + verification)
+- **Styling** – [Tailwind CSS](https://tailwindcss.com/) 4
+- **AI** – LLaMA 3.3 70B via [Groq API](https://console.groq.com/)
+- **Database** – MongoDB (daily rate limits)
 - **Deployment** – [Vercel](https://vercel.com/)
 
 ## ✨ Features
 
-- 🤖 AI-powered prompt improvement using LLaMA 3.3 70B
-- ⚡ Fast response powered by Groq inference
+- 🤖 AI-powered prompt improvement (Groq / LLaMA 3.3 70B)
+- 🔐 Sign in with GitHub, Google, or email (with email verification)
+- 👤 User profile at `/profile`
 - 📋 One-click copy improved prompt
-- 🔢 Character counter on input
-- ⏱️ Cooldown timer to prevent spam
-- 🛡️ Rate limiting on backend per IP
-- 📱 Responsive design
+- 🛡️ Daily rate limits: 5/day guest, 10/day signed-in
+- 📱 Responsive glassmorphism UI
 
 ## 🏁 Getting Started
 
 ### Prerequisites
 
 - Node.js 18+
-- Groq API Key → [console.groq.com](https://console.groq.com/)
+- [Clerk](https://dashboard.clerk.com) application (enable Email, GitHub, Google)
+- Groq API key → [console.groq.com](https://console.groq.com/)
+- MongoDB URI for rate limiting
 
 ### Installation
 
-1. Clone the repository
+1. Clone and install
 
 ```bash
 git clone https://github.com/razannnnnn/promptbetter.git
 cd promptbetter
-```
-
-2. Install dependencies
-
-```bash
 npm install
 ```
 
-3. Create `.env.local` and add your Groq API key
+2. Copy `.env.example` to `.env.local` and fill in values (see [Clerk Dashboard](https://dashboard.clerk.com) for keys)
 
-```env
-GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxx
-```
+3. In Clerk Dashboard → **User & authentication**:
+   - Enable **Sign-up with email** and **Verify at sign-up** (email code)
+   - Enable **GitHub** and **Google** social connections
 
-4. Run the development server
+4. Run dev server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
 ## 📁 Project Structure
 
 ```
 src/
 ├── app/
-│   ├── api/
-│   │   └── improvePrompt/
-│   │       └── route.js       # Groq API handler
-│   └── page.js                # Root page
+│   ├── api/improvePrompt/route.js
+│   ├── sign-in/[[...sign-in]]/page.js
+│   ├── sign-up/[[...sign-up]]/page.js
+│   ├── profile/[[...profile]]/page.js
+│   ├── layout.js
+│   └── page.js
 ├── components/
-│   ├── Hero.jsx               # Main section (holds state)
-│   ├── InputArea.jsx          # Textarea & submit button
-│   └── Result.jsx             # Display improved prompt
-└── lib/
-    └── systemPrompt.js        # AI system prompt
+│   ├── Header.jsx
+│   ├── Hero.jsx
+│   ├── inputArea.jsx
+│   └── Result.jsx
+├── lib/
+│   ├── clerkAppearance.js
+│   ├── rateLimit.js
+│   ├── mongodb.js
+│   └── systemPrompt.js
+└── middleware.js
 ```
 
 ## 🔒 Rate Limiting
 
-- **Frontend** – 10 second cooldown after each request
-- **Backend** – 15 second cooldown per IP address
-- **Input** – Maximum 500 characters per prompt
+- **Guest** (by IP): 5 requests per day
+- **Signed in** (Clerk `userId`): 10 requests per day
+- **Input**: max 1000 characters per prompt
 
 ## 🤝 Contributing
 

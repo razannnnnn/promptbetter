@@ -40,3 +40,24 @@ body {
   box-shadow: 0 0 30px rgba(204, 255, 0, 0.15);
   border-color: rgba(204, 255, 0, 0.3);
 }
+
+/* Clerk modal — center on screen */
+.cl-modalBackdrop {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.cl-modalContent {
+  margin: 0 auto !important;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+/* Ensure auth forms stay reasonably sized */
+.cl-signIn-root, .cl-signUp-root {
+  max-width: 384px;
+  width: 100%;
+}
